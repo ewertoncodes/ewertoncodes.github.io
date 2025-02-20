@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "Como os Sites Evoluíram: AJAX, SSG, SPA e SSR"
-date:   2025-02-12 00:01:28 -0300
+date:   2025-02-20 00:03:50 -0300
 categories: frontend reactjs
 ---
 
 
-Este é o meu primeiro post neste blog, e para construí-lo estou usando o Jekyll, um gerador de sites estáticos (SSG). Mas, afinal, o que isso significa? 🤔
+Este é o meu primeiro post neste blog, e para construí-lo estou usando o Jekyll, um gerador de sites estáticos (SSG). Mas, afinal, o que significa um SSG? 🤔
 
-Basicamente, um SSG (Static Site Generation) gera todas as páginas do site no momento da build, criando arquivos HTML prontos para serem servidos. Isso torna o carregamento muito mais rápido, já que o navegador recebe uma página completa sem precisar esperar pelo processamento no servidor.
+Um SSG (Static Site Generator) é uma abordagem onde todas as páginas do site são geradas de forma estática no momento da build, antes mesmo de um usuário acessá-las. Isso significa que, ao invés de processar cada requisição no servidor, o site já está pronto e é entregue como arquivos HTML estáticos. O resultado? Um carregamento muito mais rápido, menor consumo de recursos no servidor .
 
 Mas os sites sempre funcionaram dessa forma? Não! A forma como servimos conteúdo na web evoluiu bastante ao longo do tempo. Antes das abordagens modernas como SPA (Single Page Application) e SSR (Server-Side Rendering), os sites eram renderizados de maneira muito diferente.
 
