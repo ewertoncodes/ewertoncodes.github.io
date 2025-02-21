@@ -22,6 +22,9 @@ Um Exemplo famoso que popularizarou o AJAX foi o Gmail. Nele você conseguia vis
 O AJAX abriu caminho para uma experiência mais dinâmica, mas ainda exigia muitos cuidados no gerenciamento das requisições. Isso levou à evolução para algo ainda mais avançado: as Single Page Applications (SPAs).
 
 ## SPAs: O Próximo Passo na Evolução
+
+![image](/images/spa.png)
+
 As Single Page Applications (SPAs) levaram a ideia do AJAX ainda mais longe. Em vez de carregar páginas inteiras, elas carregam apenas uma única página inicial e usam JavaScript para atualizar o conteúdo dinamicamente conforme o usuário navega.
 
 Isso tornou a experiência muito mais fluida e interativa, já que não há recarregamento completo da página. Frameworks como React, Vue e Angular popularizaram esse modelo, permitindo que desenvolvedores criassem aplicações altamente dinâmicas.
@@ -37,6 +40,9 @@ Desvantagens das SPAs:
 - Tempo de carregamento inicial pode ser maior.
 
 ## O Retorno do SSR
+
+![image](/images/ssr.png)
+
 O Server-Side Rendering (SSR) resolve algumas das limitações das SPAs ao renderizar as páginas no servidor antes de enviá-las ao navegador. Isso melhora o tempo de carregamento e, principalmente, o SEO, já que os motores de busca conseguem indexar melhor o conteúdo já renderizado.
 
 Frameworks modernos como Next.js trouxeram o melhor dos dois mundos, permitindo combinar SSR e SPA dentro do mesmo projeto.
