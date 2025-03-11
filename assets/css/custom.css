@@ -152,3 +152,22 @@
 .dark-mode .slider::before {
   transform: translateX(20px); /* Move a bolinha para a direita */
 }
+
+@media (max-width: 768px) {
+  .trigger, .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-right: 10px;
+    background-color: white; /* Cor de fundo padrão para modo claro */
+    border-radius: 8px;
+    transition: background-color 0.3s ease; /* Suaviza a mudança */
+    border:none;
+    margin-top: -3px;
+  }
+
+  .dark-mode .trigger,
+  .dark-mode .site-nav {
+    background-color: var(--background-color); /* Cor para modo escuro */
+  }
+}
