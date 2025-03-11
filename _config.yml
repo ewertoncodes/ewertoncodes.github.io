@@ -21,9 +21,9 @@
 title: Ewerton Nascimento
 email: ewertonorg@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Desenvolvedor web com foco em código limpo, boas práticas e desempenho. 
-  Neste blog compartilho minha experiência com as tecnologias que tenho utilizado e os 
-  conhecimentos que venho adquirindo ao longo da minha carreira.
+  Sou desenvolvedor Ruby on Rails com 10 anos de experiência. 
+  Interesso-me por tecnologia, idiomas, contrabaixo e dança de salão. 
+  Neste blog, registro minhas anotações técnicas e aprendizados.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ewertoncodes

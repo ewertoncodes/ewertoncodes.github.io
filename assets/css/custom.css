@@ -1,0 +1,145 @@
+.profile-image {
+  width: 150px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaço entre os itens do menu */
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Mantém espaço entre About e o toggle */
+}
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  transition: background 0.3s;
+  margin-right: 10px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
+
+ 
+/* Estilo do botão */
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform 0.2s;
+}
+
+ .toggle-btn:active {
+  transform: scale(0.9);
+}
+
+:root {
+  --background-color: #181a1b;
+  --text-color: #b2aba1;
+  --border-color: #545b5e;
+  --title-color: #a8a095;
+  --link-color: #a277ff; /* Roxo para todos os links */
+  --link-hover-color: #c792ea; /* Roxo mais claro no hover */
+  --post-link-color: #a277ff;
+  --post-link-hover-color: #c792ea;
+  --code-bg: #1e1e1e;
+  --code-text: #999083;
+  --pre-bg: #282828;
+  --pre-text: #c0bbb3;
+}
+
+/* Tema escuro */
+.dark-mode {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Garantindo que todos os links fiquem roxos */
+.dark-mode a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.dark-mode a:hover {
+  color: var(--link-hover-color);
+}
+
+/* Títulos e navegação suavizados */
+.dark-mode .site-title,
+.dark-mode .site-nav .page-link {
+  color: var(--title-color);
+}
+
+.dark-mode .site-nav .page-link:hover {
+  color: var(--link-hover-color);
+}
+
+/* Links dos posts */
+.dark-mode .post-link {
+  color: var(--post-link-color);
+}
+
+.dark-mode .post-link:hover {
+  color: var(--post-link-hover-color);
+}
+
+/* Código inline */
+.dark-mode code {
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/* Blocos de código */
+.dark-mode pre {
+  background-color: var(--pre-bg);
+  color: var(--pre-text);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* Bordas e separadores */
+.dark-mode hr {
+  border-color: var(--border-color);
+}
+
+.site-header {
+  border-bottom: none; /* Removida a borda inferior */
+}
+
+.site-footer {
+  border-top: none;
+}
