@@ -143,3 +143,12 @@
 .site-footer {
   border-top: none;
 }
+
+/* Quando ativado (dark mode), move a bolinha para a direita */
+.dark-mode .slider {
+  background-color: #6a0dad; /* Roxo escuro no modo dark */
+}
+
+.dark-mode .slider::before {
+  transform: translateX(20px); /* Move a bolinha para a direita */
+}
