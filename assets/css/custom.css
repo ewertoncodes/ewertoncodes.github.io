@@ -192,5 +192,9 @@ pre, code {
     justify-content: center; 
     margin-top: 10px;
   }
+
+  figure.highlight{
+    width: 30ch;
+  }
 }
 

@@ -8,6 +8,15 @@ figure.highlight {
   overflow: auto;
 }
 
+/* Ajuste para garantir espaçamento correto no bloco de código */
+.highlight pre code {
+  display: block;
+  padding: 10px;
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+
 pre {
   background-color: transparent;
   border: none;
@@ -76,12 +85,4 @@ code {
 
 .highlight .ow { color: #9580FF } /* Operator.Word */
 .highlight .w { color: #F8F8F2 } /* Whitespace */
-
-/* Ajuste para garantir espaçamento correto no bloco de código */
-.highlight pre code {
-  display: block;
-  padding: 10px;
-  overflow-x: auto;
-  white-space: pre;
-  word-wrap: normal;
-}
+  
