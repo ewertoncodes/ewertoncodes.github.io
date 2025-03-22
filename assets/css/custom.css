@@ -122,15 +122,11 @@
   border-radius: 4px;
 }
 
-/* Blocos de código */
-.dark-mode pre {
-  background-color: var(--pre-bg);
-  color: var(--pre-text);
-  padding: 1rem;
-  border-radius: 8px;
-  overflow-x: auto;
+pre, code {
+  background-color: #181a1b;
+  border: 1px solid #e8e8e8;
+  border-radius: 1px;
 }
-
 /* Bordas e separadores */
 .dark-mode hr {
   border-color: var(--border-color);

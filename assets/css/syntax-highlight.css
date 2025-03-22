@@ -1,0 +1,87 @@
+/* Estilização do bloco de código */
+figure.highlight {
+  background-color: #22212C;
+  border: 1px solid #22212C;
+  border-radius: 7px;
+  margin: 20px 0;
+  padding: 7px;
+  overflow: auto;
+}
+
+pre {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  font-family: 'Bitstream Vera Sans Mono', 'Courier', monospace;
+  border-radius: 7px;
+  font-size: 14px;
+  color: #F8F8F2;
+}
+
+/* Estilos para elementos específicos dentro do código */
+.highlight .k { color: #FF80BF } /* Keyword */
+.highlight .kd { color: #8AFF80 } /* Keyword.Declaration */
+.highlight .nf { color: #8AFF80 } /* Name.Function */
+.highlight .p { color: #FF80BF } /* Punctuation */
+.highlight .nx { color: #8AFF80 } /* Name.Other */
+.highlight .o { color: #9580FF } /* Operator */
+.highlight .nt { color: #FF80BF } /* Name.Tag */
+.highlight .sr { color: #FFFF80 } /* Literal.String.Regex */
+.highlight .err { color: #FF9580 } /* Error */
+
+.highlight .c, 
+.highlight .cm, 
+.highlight .cp, 
+.highlight .c1, 
+.highlight .cs { color: #7970A9 } /* Comments */
+
+.highlight .s, 
+.highlight .sb, 
+.highlight .sc, 
+.highlight .sd, 
+.highlight .s2, 
+.highlight .se, 
+.highlight .sh, 
+.highlight .si, 
+.highlight .sx, 
+.highlight .sr, 
+.highlight .s1, 
+.highlight .ss { color: #FFFF80 } /* Strings */
+
+.highlight .m, 
+.highlight .mf, 
+.highlight .mh, 
+.highlight .mi, 
+.highlight .mo, 
+.highlight .il { color: #9580FF } /* Numbers */
+
+.highlight .na, 
+.highlight .nb, 
+.highlight .nc, 
+.highlight .no, 
+.highlight .nd, 
+.highlight .ni, 
+.highlight .ne, 
+.highlight .nf, 
+.highlight .nl, 
+.highlight .nn, 
+.highlight .nx, 
+.highlight .py, 
+.highlight .nt, 
+.highlight .nv { color: #8AFF80 } /* Names */
+
+.highlight .ow { color: #9580FF } /* Operator.Word */
+.highlight .w { color: #F8F8F2 } /* Whitespace */
+
+/* Ajuste para garantir espaçamento correto no bloco de código */
+.highlight pre code {
+  display: block;
+  padding: 10px;
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
