@@ -6,7 +6,7 @@ categories: backend ruby
 ---
 
 
-Ruby é famoso por sua sintaxe elegante e recursos poderosos, entre eles os **blocos**, **Procs** e **Lambdas**. Se você está começando com Ruby ou quer reforçar o entendimento, este post vai ajudar a esclarecer o que são essas construções, como funcionam, e quando usá-las.
+Ruby é famoso por sua sintaxe elegante e recursos poderosos, entre eles os **Blocos**, **Procs** e **Lambdas**. Se você está começando com Ruby ou quer reforçar o entendimento, este post vai ajudar a esclarecer o que são esses recursos, como funcionam, e quando usá-las.
 
 ## Blocos
 Um **bloco** é um pedaço de código que pode ser passado para um método. Um exemplo bastante comum é seu uso em iterações, como no método `each`. Podemos usar blocos tanto inline, com os caracteres `{}`, quanto em múltiplas linhas, com `do .. end`.
