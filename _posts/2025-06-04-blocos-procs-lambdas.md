@@ -11,7 +11,7 @@ Ruby é famoso por sua sintaxe elegante e recursos poderosos, entre eles os **Bl
 ## Blocos
 Um **bloco** é um pedaço de código que pode ser passado para um método. Um exemplo bastante comum é seu uso em iterações, como no método `each`. Podemos usar blocos tanto inline, com os caracteres `{}`, quanto em múltiplas linhas, com `do .. end`.
 
-```ruby
+{% highlight ruby %}
 array = [1, 2, 3]
 
 array.each{ |item| p item }
@@ -19,7 +19,7 @@ array.each{ |item| p item }
 array.each do |item|
   p item
 end
-```
+{% endhighlight %}
 
 ## Procs
 
@@ -30,7 +30,7 @@ end
 - Se não passarmos o argumento esperado, a execução continua normalmente.
 
 
-```ruby
+{% highlight ruby %}
 my_proc = Proc.new { puts 'my proc' } # ou proc {puts 'my proc'}
 my_proc.call
 
@@ -47,7 +47,7 @@ other_proc.call
 other_proc.call(5,2)
 => "x is 5"
 
-```
+{% endhighlight %}
 
 
 ## Lambdas
@@ -56,12 +56,15 @@ Se nenhum argumento for passado, um erro será exibido.
 **Lambdas** são muito parecidas com Procs, mas são **estritas** em relação aos argumentos. Se você não passar o número exato de argumentos, um erro será gerado. 
 
 
-```ruby
+{% highlight ruby %}
+
 my_lambda = lambda { |x| "x is #{x}" }
 my_lambda.call()
 
  `block in <top (required)>': wrong number of arguments (given 0, expected 1) (ArgumentError)`
-```
+
+{% endhighlight %}
+
 ## Conclusão
 
 Em resumo, blocos, Procs e lambdas oferecem formas poderosas e flexíveis de lidar com trechos de código em Ruby. Os blocos são ideais para usos rápidos, como em iterações, enquanto Procs permitem reutilizar lógica de forma mais solta, sem tanta preocupação com os argumentos. Já as lambdas se comportam de maneira mais próxima às funções tradicionais, garantindo que os parâmetros sejam respeitados com rigor.
