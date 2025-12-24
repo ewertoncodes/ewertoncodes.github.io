@@ -63,10 +63,15 @@ HMACSHA256(
 
 Colocando tudo junto o jwt ficaria assim:
 
-`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30`
+```bash
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+```
 
 
 ### Como validamos a Assinatura?
+
+![image](/images/jwt.png)
+
 
 Quando o servidor recebe o token, ele inicia um processo de verificação para garantir que aquelas informações são legítimas. Em vez de tentar "descriptografar" a assinatura, o servidor opta por **reconstruí-la**. Ele separa o Header e o Payload enviados pelo usuário e, utilizando a sua própria **Secret** (chave secreta) guardada no ambiente seguro do backend, aplica novamente o algoritmo de hash.
 
