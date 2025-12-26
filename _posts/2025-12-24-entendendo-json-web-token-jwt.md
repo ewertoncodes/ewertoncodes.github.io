@@ -54,18 +54,18 @@ A segunda parte do jwt é o payload, um objeto json com as informações da enti
 
 A terceira parte do jwt é a assinatura.  Ela é formada pelo header  mais o payload  encodados em Base64Url e um secret. A assinatura é a parte mais importante  do jwt pois é ela que garante  a integridade do nosso token.
 
-```javascript
+{% highlight js %}
 HMACSHA256(
   base64UrlEncode(header) + "." +
   base64UrlEncode(payload),
   secret)
-```
+{% endhighlight %}
 
 Colocando tudo junto o jwt ficaria assim:
 
-```bash
+{% highlight js %}
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
-```
+{% endhighlight %}
 
 
 ### Como validamos a Assinatura?
@@ -78,14 +78,13 @@ Quando o servidor recebe o token, ele inicia um processo de verificação para g
 O resultado desse cálculo gera uma nova assinatura que é então comparada com a assinatura que veio originalmente no token. Se ambas forem exatamente iguais, o servidor tem a prova matemática de que o token é íntegro e pode confiar nos dados contidos ali.
 
 JavaScript
-
-```javascript
+{ % highlight js %}
 const novaAssinatura = hash(`${headerSent}.${payloadSent}`, 'sua_secret_aqui');
 
 if (novaAssinatura === signatureSent) {
   // O token é íntegro e válido!
 }
-```
+{ % endhighlight %}
 
 Se um hacker interceptar o token e alterar o `user_id` no Payload de `10` para `1` (na tentativa de virar um admin), ele terá um problema ao mudar qualquer caractere do Payload, a assinatura original deixa de ser válida.
 
