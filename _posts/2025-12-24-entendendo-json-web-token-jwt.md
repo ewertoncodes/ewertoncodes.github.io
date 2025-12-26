@@ -78,13 +78,13 @@ Quando o servidor recebe o token, ele inicia um processo de verificação para g
 O resultado desse cálculo gera uma nova assinatura que é então comparada com a assinatura que veio originalmente no token. Se ambas forem exatamente iguais, o servidor tem a prova matemática de que o token é íntegro e pode confiar nos dados contidos ali.
 
 JavaScript
-{ % highlight js %}
+{% highlight js %}
 const novaAssinatura = hash(`${headerSent}.${payloadSent}`, 'sua_secret_aqui');
 
 if (novaAssinatura === signatureSent) {
   // O token é íntegro e válido!
 }
-{ % endhighlight %}
+{% endhighlight %}
 
 Se um hacker interceptar o token e alterar o `user_id` no Payload de `10` para `1` (na tentativa de virar um admin), ele terá um problema ao mudar qualquer caractere do Payload, a assinatura original deixa de ser válida.
 
