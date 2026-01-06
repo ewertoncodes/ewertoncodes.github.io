@@ -86,10 +86,10 @@ if (novaAssinatura === signatureSent) {
 }
 {% endhighlight %}
 
-Se um hacker interceptar o token e alterar o `user_id` no Payload de `10` para `1` (na tentativa de virar um admin), ele terá um problema ao mudar qualquer caractere do Payload, a assinatura original deixa de ser válida.
+Se uma pessoa mal-intencionada interceptar um token JWT e tentar alterar o role no payload — por exemplo, mudando de user para admin — qualquer modificação em um único caractere fará com que a assinatura original deixe de ser válida, e o token será rejeitado pelo servidor.
 
-Para que o servidor aceitasse essa alteração, o hacker precisaria gerar uma nova assinatura que batesse com o novo conteúdo. No entanto, como a assinatura depende obrigatoriamente da **Secret** para ser gerada, e essa chave só o servidor possui, o invasor não consegue concluir o ataque. Sem a chave secreta, qualquer tentativa de alteração resulta em uma assinatura inválida, e o sistema bloqueia o acesso imediatamente.
+Para que o servidor aceitasse essa alteração, o atacante precisaria gerar uma nova assinatura que batesse com o novo conteúdo. No entanto, como a assinatura depende obrigatoriamente da **Secret** para ser gerada, e essa chave só o servidor possui, o invasor não consegue concluir o ataque. Sem a chave secreta, qualquer tentativa de alteração resulta em uma assinatura inválida, e o sistema bloqueia o acesso imediatamente.
 
 O JWT é uma ferramenta poderosa para a autenticação , especialmente por ser **stateless**. Isso permite que sua aplicação escale facilmente, já que o servidor não precisa consultar um banco de dados de sessões a cada requisição.
 
-No entanto, lembre-se o JWT protege a integridade dos dados, mas não a sua privacidade (já que o payload é visível). Portanto, mantenha sua `Secret` bem guardada, utilize sempre conexões HTTPS e nunca armazene informações sensíveis como senhas dentro do token. Com esses cuidados, o JWT se torna uma solução robusta e eficiente para o controle de acesso da sua API.
+No entanto, lembre-se o JWT protege a integridade dos dados, mas não a sua privacidade (já que o payload é visível). Portanto, mantenha sua `Secret` bem guardada, nunca armazene informações sensíveis como senhas dentro do token, crie uma secret que não seja fácil de ser quebrada com brute force. Com esses cuidados, o JWT se torna uma solução robusta e eficiente para o controle de acesso da sua API.
