@@ -12,7 +12,7 @@ Olá, me chamo Ewerton!
 Sou programador com 10 anos de experiência, especializado em Ruby on Rails, React.js, PostgreSQL e Docker.
 Neste blog, compartilho anotações técnicas, boas práticas e aprendizados do dia a dia como desenvolvedor.
 
-Ao longo da minha carreira, tive a oportunidade de atuar em projetos diversos — desde aplicações greenfield até sistemas legados complexos. Gosto de escrever código limpo, priorizar a clareza e buscar soluções simples para problemas reais.
+Ao longo da minha carreira, tive a oportunidade de atuar em diversos projetos desde aplicações greenfield até sistemas legados.
 
 Além de programar, acredito no valor da documentação, da troca de conhecimento e do aprendizado contínuo. Criar este blog foi uma forma de organizar o que aprendo, compartilhar com outros desenvolvedores e também me desafiar a explicar melhor o que sei.
 
