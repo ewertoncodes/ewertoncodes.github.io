@@ -4,7 +4,8 @@ title: "Compartilhando Comportamentos usando Herança no Ruby"
 date: 2026-03-17 11:40:00 -0300
 categories: backend
 ---
-## Compartilhando Comportamentos usando Herança no Ruby
+
+<img src="/images/heranca-ruby.png" alt="Diagrama de Herança no Ruby" width="800" height="300">
 
 Um dos pilares da programação orientada a objetos é a herança, que é um conceito que permite que uma classe herde atributos e métodos de outra classe. No Ruby, a herança é feita usando o operador `<`.  
 
