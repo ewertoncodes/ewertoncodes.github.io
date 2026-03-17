@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "O problema N+1: Um vilão na performance do Backend"
+title:  "O problema N+ 1"
 date:   2026-02-23 00:17:30 -0300
 categories: backend
 ---

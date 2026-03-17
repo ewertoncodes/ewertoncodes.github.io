@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Como os Sites Evoluíram: AJAX, SSG, SPA e SSR"
+title:  "Como os Sites Evoluíram"
 date:   2025-02-20 00:03:50 -0300
 categories: frontend reactjs
 ---
