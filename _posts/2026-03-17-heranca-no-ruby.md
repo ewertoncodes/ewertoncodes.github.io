@@ -5,7 +5,7 @@ date: 2026-03-17 11:40:00 -0300
 categories: backend
 ---
 
-<img src="/images/heranca-ruby.png" alt="Diagrama de Herança no Ruby" width="800" height="300">
+<img src="/images/treasure.jpeg" alt="Diagrama de Herança no Ruby" width="800" height="300">
 
 Um dos pilares da programação orientada a objetos é a herança, que é um conceito que permite que uma classe herde atributos e métodos de outra classe. No Ruby, a herança é feita usando o operador `<`.  
 
@@ -26,12 +26,12 @@ O `super` é a palavra-chave usada para invocar um método da classe pai a parti
 {% highlight ruby %}
 class Warrior < Character
   def attack
-    super + " com espada"
+    super + " with a sword"
   end
 end
 
 Warrior.new.attack
-#=> "Attack com espada"
+#=> "Attack with a sword"
 {% endhighlight %}
 
 Neste caso, chamar `super` funciona perfeitamente. A classe `Warrior` herda os métodos de `Character` e sobrescreve o método `attack`. A chamada para `super` executa o `attack` da classe pai.
@@ -62,12 +62,12 @@ Para resolver isso, precisamos usar **`super()`** com os parênteses:
 {% highlight ruby %}
 class Mage < Character
   def attack(spell)
-    super() + " com magia #{spell}"
+    super() + " with spell #{spell}"
   end
 end
 
 Mage.new.attack("Fireball")
-#=> "Attack com magia Fireball"
+#=> "Attack with spell Fireball"
 {% endhighlight %}
 
 **Resumo:**
