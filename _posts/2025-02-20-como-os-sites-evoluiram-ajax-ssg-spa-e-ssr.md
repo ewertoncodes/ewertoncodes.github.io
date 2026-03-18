@@ -5,6 +5,7 @@ date:   2025-02-20 00:03:50 -0300
 categories: frontend reactjs
 ---
 
+![image](/images/evolucao.jpg) 
 
 Este é o meu primeiro post neste blog, e para construí-lo estou usando o **Jekyll**, um gerador de sites estáticos (SSG). Mas, afinal, o que significa um SSG? 🤔
 
@@ -12,7 +13,7 @@ Um **SSG (Static Site Generator)** é uma abordagem onde todas as páginas do si
 
 Mas os sites sempre funcionaram dessa forma? Não! A forma como servimos conteúdo na web evoluiu bastante ao longo do tempo. Antes das abordagens modernas como SPA (Single Page Application) e SSR (Server-Side Rendering), os sites eram renderizados de maneira muito diferente.
 
-## O Início: Sites Tradicionais e o Surgimento do AJAX
+## O Início da Web com Sites Tradicionais e o Surgimento do AJAX
 No começo da web, a maioria dos sites funcionava com uma abordagem clássica: cada clique em um link ou envio de formulário resultava no carregamento de uma nova página pelo servidor. Isso era simples, mas tornava a navegação lenta e pouco interativa.
 
 A grande revolução veio com o ***AJAX (Asynchronous JavaScript and XML)***. Com essa técnica, os sites puderam buscar e atualizar informações sem precisar recarregar a página inteira. Isso trouxe um nível de interatividade antes impensável.
@@ -21,7 +22,7 @@ Um Exemplo famoso que popularizarou o AJAX foi o Gmail. Nele você conseguia vis
 
 O AJAX abriu caminho para uma experiência mais dinâmica, mas ainda exigia muitos cuidados no gerenciamento das requisições. Isso levou à evolução para algo ainda mais avançado: as Single Page Applications (SPAs).
 
-## SPAs: O Próximo Passo na Evolução
+## O Próximo Passo na Evolução com SPAs
 
 
 As **Single Page Applications (SPAs)** levaram a ideia do AJAX ainda mais longe. Em vez de carregar páginas inteiras, elas carregam apenas uma única página inicial e usam JavaScript para atualizar o conteúdo dinamicamente conforme o usuário navega.
