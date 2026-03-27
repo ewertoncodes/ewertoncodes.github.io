@@ -69,3 +69,6 @@ header_pages:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# Google Analytics
+google_analytics: G-T1N7N755P8
