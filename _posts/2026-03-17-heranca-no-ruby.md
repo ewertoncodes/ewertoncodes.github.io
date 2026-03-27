@@ -3,6 +3,7 @@ layout: post
 title: "Compartilhando Comportamentos usando Herança no Ruby"
 date: 2026-03-17 11:40:00 -0300
 categories: backend
+tags: [ruby, heranca, poo]
 ---
 
 <img src="/images/treasure.jpeg" alt="Diagrama de Herança no Ruby" width="800" height="300">

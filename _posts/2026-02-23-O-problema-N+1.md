@@ -3,6 +3,7 @@ layout: post
 title:  "O problema N+ 1"
 date:   2026-02-23 00:17:30 -0300
 categories: backend
+tags: [bancodedados, performance, ruby, rails, sql]
 ---
 
 Performance é uma das minhas preocupações quando estou desenvolvendo uma aplicação. E um dos problemas mais conhecidos relacionado a performance é o problema N+1. Ele acontece quando temos uma consulta que retorna N registros, e para cada um desses registros, fazemos uma nova consulta para buscar informações relacionadas.

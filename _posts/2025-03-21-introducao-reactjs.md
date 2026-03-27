@@ -3,6 +3,7 @@ layout: post
 title:  "Criando meu primeiro componente ReactJS"
 date:   2025-03-21 00:03:50 -0300
 categories: frontend reactjs
+tags: [react, frontend, javascript]
 ---
 
 

@@ -3,6 +3,7 @@ layout: post
 title:  "Blocos, Procs e Lambdas no Ruby"
 date:   2025-06-04 00:18:20 -0300
 categories: backend ruby
+tags: [ruby, backend, dicas]
 ---
 
 

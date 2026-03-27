@@ -32,6 +32,23 @@ github_username:  ewertoncodes
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-reading-time
+  - jekyll-archives
+
+jekyll-archives:
+  enabled:
+    - tags
+  layout: 'tag'
+  permalinks:
+    tag: '/tags/:name/'
+
+reading_time:
+  second_plural: "segundos"
+  minute_singular: "minuto"
+  minute_plural: "minutos"
+
+header_pages:
+  - about.markdown
 
 # Exclude from processing.
 # The following items will not be processed, by default.

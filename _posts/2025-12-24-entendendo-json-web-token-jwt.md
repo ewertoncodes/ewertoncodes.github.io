@@ -3,6 +3,7 @@ layout: post
 title:  "Entendendo o JSON Web Token (JWT)"
 date:   2025-12-24 00:17:30 -0300
 categories: backend
+tags: [jwt, backend, seguranca, auth]
 ---
 
 
