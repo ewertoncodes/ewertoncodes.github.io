@@ -9,7 +9,7 @@ tags:
 - poo
 canonical_url: https://ewertoncodes.github.io/backend/2026/03/17/heranca-no-ruby.html
 ---
-<img src="/images/treasure.jpeg" alt="Diagrama de Herança no Ruby" width="800" height="300">
+<img src="/assets/img/treasure.jpeg" alt="Diagrama de Herança no Ruby" width="800" height="300">
 
 Um dos pilares da programação orientada a objetos é a herança, que é um conceito que permite que uma classe herde atributos e métodos de outra classe. No Ruby, a herança é feita usando o operador `<`.  
 

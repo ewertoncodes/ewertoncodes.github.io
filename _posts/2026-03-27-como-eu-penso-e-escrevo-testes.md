@@ -9,7 +9,7 @@ tags:
 - rspec
 canonical_url: https://ewertoncodes.github.io/backend/2026/03/27/como-eu-penso-e-escrevo-testes.html
 ---
-![Como eu penso e escrevo meus testes](/images/xfb6xdd39lglaxle9ns9.png)
+![Como eu penso e escrevo meus testes](/assets/img/xfb6xdd39lglaxle9ns9.png)
 
 Testes são uma parte fundamental do desenvolvimento de software. Eles nos ajudam a garantir que nosso código funcione como esperado e que possamos fazer alterações sem quebrar funcionalidades existentes.
 
@@ -18,7 +18,7 @@ Antes de criar uma aplicação, eu gosto de pensar em como vou testá-la. Isso m
 Piramide de testes é uma forma de organizar os testes em uma aplicação. Ela é dividida em três camadas.
 Na base temos os testes unitários, no meio os testes de integração e no topo os testes de ponta a ponta.
 
-![Piramide de testes](/images/piramide-testes.svg)
+![Piramide de testes](/assets/img/piramide-testes.svg)
 
 O próximo conceito de como escrever testes é o TDD (Test-Driven Development). 
 No TDD, escrevemos o teste antes de escrever o código. O fluxo é o seguinte:

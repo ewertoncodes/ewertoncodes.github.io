@@ -74,7 +74,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 
 ### Como validamos a Assinatura?
 
-![image](/images/jwt.png)
+![image](/assets/img/jwt.png)
 
 
 Quando o servidor recebe o token, ele inicia um processo de verificação para garantir que aquelas informações são legítimas. Em vez de tentar "descriptografar" a assinatura, o servidor opta por **reconstruí-la**. Ele separa o Header e o Payload enviados pelo usuário e, utilizando a sua própria **Secret** (chave secreta) guardada no ambiente seguro do backend, aplica novamente o algoritmo de hash.

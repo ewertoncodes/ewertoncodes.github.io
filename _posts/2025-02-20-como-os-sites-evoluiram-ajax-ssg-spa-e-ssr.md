@@ -15,7 +15,7 @@ description: Uma jornada pela evolução da web, desde os sites estáticos tradi
   até as modernas Single Page Applications (SPAs) e Server-Side Rendering (SSR).
 canonical_url: https://ewertoncodes.github.io/frontend/web/2025/02/20/como-os-sites-evoluiram-ajax-ssg-spa-e-ssr.html
 ---
-![image](/images/evolucao.jpg) 
+![image](/assets/img/evolucao.jpg) 
 
 Este é o meu primeiro post neste blog, e para construí-lo estou usando o **Jekyll**, um gerador de sites estáticos (SSG). Mas, afinal, o que significa um SSG? 🤔
 
@@ -45,7 +45,7 @@ OK. Mas como funciona uma SPA?
 - O JavaScript da página solicita dados do servidor via API (normalmente em JSON).
 - A aplicação atualiza dinamicamente o conteúdo exibido, sem precisar recarregar a página inteira.
 
-![image](/images/spa.png)
+![image](/assets/img/spa.png)
 
 
 **Exemplo real**: Quando você navega pelo Gmail, o conteúdo dos e-mails muda sem que a página toda precise ser recarregada. Isso acontece porque o frontend faz chamadas assíncronas para buscar apenas os dados necessários.
@@ -71,7 +71,7 @@ Diferente das SPAs, que carregam um HTML básico e preenchem o conteúdo via Jav
 
 Como funciona o SSR?
 
-![image](/images/ssr.png)
+![image](/assets/img/ssr.png)
 
 
 - O usuário acessa a aplicação e o navegador faz uma requisição ao servidor.
