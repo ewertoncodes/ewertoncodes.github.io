@@ -23,4 +23,4 @@ Se você está vendo isso no **Dev.to**, significa que o pipeline funcionou!
 puts "Olá, mundo da automação!"
 ```
 
-![Imagem de Teste](../../images/profile.jpeg)
+![Imagem de Teste](/assets/img/profile.jpeg)
