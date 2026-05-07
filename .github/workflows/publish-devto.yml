@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "_posts/**.md"
-  workflow_dispatch:  # Permite rodar manualmente
+  workflow_dispatch:  # ← ADICIONE ESTA LINHA
 
 jobs:
   publish:
@@ -15,60 +15,46 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Precisa dos últimos 2 commits para diff
+          fetch-depth: 2
 
-      - name: Detect posts to publish
+      - name: Detect new posts and publish to dev.to
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
           BLOG_URL: "https://ewertoncodes.github.io"
         run: |
-          # Detecta posts NOVOS ou MODIFICADOS
+          # MODIFIQUE ESTA LINHA para incluir modified também no push
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Modo manual: publica todos os posts que não têm 'published_devto: true'
-            POSTS_TO_PUBLISH=$(grep -L "published_devto: true" _posts/*.md || true)
+            # Modo manual: publica TODOS os posts
+            NEW_POSTS=$(ls _posts/*.md 2>/dev/null || true)
           else
-            # Modo automático: apenas novos ou modificados no último commit
-            POSTS_TO_PUBLISH=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
+            # Modo automático: apenas novos ou modificados
+            NEW_POSTS=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
           fi
 
-          if [ -z "$POSTS_TO_PUBLISH" ]; then
-            echo "📭 Nenhum post para publicar."
+          if [ -z "$NEW_POSTS" ]; then
+            echo "Nenhum post novo encontrado."
             exit 0
           fi
 
-          echo "📦 Posts a publicar:"
-          echo "$POSTS_TO_PUBLISH"
-
-          for POST in $POSTS_TO_PUBLISH; do
-            echo ""
-            echo "🚀 Publicando: $(basename "$POST")"
-            
-            export POST_PATH="$POST"
-            python3 << 'PYEOF'
-          import os, re, json, urllib.request, urllib.error, sys
+          for POST in $NEW_POSTS; do
+            echo "Publicando: $POST"
+            POST_PATH="$POST" python3 - << 'PYEOF'
+          import os, re, json, urllib.request, urllib.error
 
           post_path = os.environ["POST_PATH"]
           blog_url = os.environ["BLOG_URL"]
           api_key = os.environ["DEVTO_API_KEY"]
 
-          if not api_key:
-              print("❌ DEVTO_API_KEY não configurada")
-              sys.exit(1)
-
           with open(post_path, "r") as f:
               content = f.read()
 
           parts = content.split("---", 2)
-          if len(parts) < 3:
-              print(f"❌ Front matter inválido em {post_path}")
-              sys.exit(1)
-
-          front_matter = parts[1]
-          body = parts[2].strip()
+          front_matter = parts[1] if len(parts) >= 3 else ""
+          body = parts[2].strip() if len(parts) >= 3 else content
 
           def get_field(fm, key):
               match = re.search(rf"^{key}:\s*(.+)$", fm, re.MULTILINE)
-              return match.group(1).strip().strip('"\'') if match else ""
+              return match.group(1).strip().strip("'\"") if match else ""
 
           def get_list_field(fm, key):
               match = re.search(rf"^{key}:\s*\n((?:- .+\n?)+)", fm, re.MULTILINE)
@@ -77,33 +63,26 @@ jobs:
               return [line.strip("- ").strip() for line in match.group(1).strip().split("\n")]
 
           title = get_field(front_matter, "title")
-          if not title:
-              print(f"❌ Post sem título: {post_path}")
-              sys.exit(1)
-
-          # Pega o slug do front matter ou gera a partir do filename
-          slug = get_field(front_matter, "slug")
-          if not slug:
-              filename = os.path.basename(post_path).replace(".md", "")
-              slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
-
-          canonical_url = f"{blog_url}/posts/{slug}/"
-          description = get_field(front_matter, "description") or get_field(front_matter, "excerpt") or f"{title[:150]}..."
+          description = get_field(front_matter, "description")
           tags = get_list_field(front_matter, "tags")[:4]
 
-          print(f"📝 Título: {title}")
-          print(f"🔗 Canonical: {canonical_url}")
-          print(f"🏷️ Tags: {tags}")
+          filename = os.path.basename(post_path).replace(".md", "")
+          slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
+          canonical = f"{blog_url}/posts/{slug}/"
 
-          # Remove Liquid tags como {: .prompt-xxx }
-          body = re.sub(r"\{:\s*\.\w+\s*\}", "", body)
+          body = re.sub(r"\{:\s*\.prompt-\w+\s*\}", "", body)
+
+          # Log para debug
+          print(f"Título: {title}")
+          print(f"Tags: {tags}")
+          print(f"Canonical: {canonical}")
 
           payload = {
               "article": {
                   "title": title,
                   "body_markdown": body,
                   "published": True,
-                  "canonical_url": canonical_url,
+                  "canonical_url": canonical,
                   "description": description,
                   "tags": tags,
               }
@@ -113,37 +92,19 @@ jobs:
           req = urllib.request.Request(
               "https://dev.to/api/articles",
               data=data,
-              headers={
-                  "Content-Type": "application/json",
-                  "api-key": api_key
-              },
+              headers={"Content-Type": "application/json", "api-key": api_key},
               method="POST",
           )
 
           try:
               with urllib.request.urlopen(req) as res:
                   result = json.loads(res.read())
-                  print(f"✅ Publicado com sucesso!")
-                  print(f"🔗 Dev.to: {result.get('url')}")
-                  print(f"🔗 Canonical: {canonical_url}")
+                  print(f"Publicado com sucesso!")
+                  print(f"URL: {result.get('url')}")
+                  print(f"Canonical: {canonical}")
           except urllib.error.HTTPError as e:
-              error_body = e.read().decode()
-              print(f"❌ Erro {e.code}: {error_body}")
-              
-              # Se já existe, tenta atualizar em vez de criar
-              if "already been taken" in error_body:
-                  print("⚠️ Post já existe no Dev.to. Tente atualizar manualmente ou use um slug diferente.")
-              sys.exit(1)
+              error_msg = e.read().decode()
+              print(f"Erro ao publicar: {e.code} - {error_msg}")
+              exit(1)
           PYEOF
-            
-            # Marca como publicado (opcional)
-            if [ $? -eq 0 ]; then
-              echo "✅ $(basename "$POST") publicado com sucesso!"
-              # Opcional: adiciona published_devto: true ao front matter
-              if ! grep -q "published_devto: true" "$POST"; then
-                sed -i '/^---$/a published_devto: true' "$POST"
-              fi
-            else
-              echo "❌ Falha ao publicar $(basename "$POST")"
-            fi
           done
