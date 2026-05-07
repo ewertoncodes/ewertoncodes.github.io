@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - "_posts/**.md"
-  workflow_dispatch:
 
 jobs:
   publish:
@@ -15,26 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 2  # precisa do commit anterior para detectar arquivos novos
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.4'
-
-      - name: Install dependencies
-        run: gem install yaml front_matter_parser
+          ruby-version: 3.4
 
       - name: Detect new posts and publish to dev.to
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
           BLOG_URL: "https://ewertoncodes.github.io"
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            NEW_POSTS=$(ls _posts/*.md 2>/dev/null || true)
-          else
-            NEW_POSTS=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
-          fi
+          # Pega os arquivos .md em _posts/ que foram adicionados neste push
+          NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/**.md')
 
           if [ -z "$NEW_POSTS" ]; then
             echo "Nenhum post novo encontrado."
@@ -43,82 +36,60 @@ jobs:
 
           for POST in $NEW_POSTS; do
             echo "Publicando: $POST"
-            
-            # Lê o post usando Ruby com parsing correto
-            ruby <<RUBY
-require 'json'
-require 'net/http'
-require 'uri'
-require 'yaml'
 
-post_path = '$POST'
-blog_url = '$BLOG_URL'
-api_key = '$DEVTO_API_KEY'
+            # Extrai o slug do nome do arquivo (remove data e extensão)
+            FILENAME=$(basename "$POST" .md)
+            SLUG=$(echo "$FILENAME" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}-//')
+            CANONICAL="$BLOG_URL/posts/$SLUG/"
 
-# Lê o arquivo
-content = File.read(post_path)
+            # Extrai o front matter
+            TITLE=$(grep -m1 '^title:' "$POST" | sed "s/^title: *//;s/^['\"]//;s/['\"]$//")
+            DESCRIPTION=$(grep -m1 '^description:' "$POST" | sed 's/^description: *//')
+            TAGS_RAW=$(awk '/^tags:/{found=1; next} found && /^- /{print; next} found && !/^- /{exit}' "$POST" | sed 's/^- //' | head -4 | tr '\n' ',' | sed 's/,$//')
 
-# Separa front matter e body
-parts = content.split('---', 3)
-if parts.length >= 3
-  front_matter = YAML.safe_load(parts[1])
-  body = parts[2].strip
-else
-  puts "ERRO: Front matter inválido em #{post_path}"
-  exit 1
-end
+            # Extrai o corpo do post (remove o front matter)
+            BODY=$(awk 'BEGIN{fm=0} /^---/{fm++; next} fm>=2{print}' "$POST")
 
-# Extrai dados
-title = front_matter['title']
-description = front_matter['description'] || ''
-tags = front_matter['tags'] || []
-tags = tags.first(4) if tags.is_a?(Array)
-tags = ['database'] if tags.nil? || tags.empty?
+            # Remove canonical_url do corpo se existir
+            BODY=$(echo "$BODY" | grep -v '^canonical_url:')
 
-# Gera slug e canonical
-filename = File.basename(post_path, '.md')
-slug = filename.gsub(/^\d{4}-\d{2}-\d{2}-/, '')
-canonical = "\#{blog_url}/posts/\#{slug}/"
+            # Monta o JSON e publica na API do dev.to
+            ruby -e "
+              require 'net/http'
+              require 'json'
+              require 'uri'
 
-# Remove sintaxe do Jekyll do body
-body.gsub!(/\{:\s*\.prompt-\w+\s*\}/, '')
+              uri = URI('https://dev.to/api/articles')
+              http = Net::HTTP.new(uri.host, uri.port)
+              http.use_ssl = true
 
-puts "Título: #{title}"
-puts "Tags: #{tags.join(', ')}"
-puts "Canonical: #{canonical}"
+              req = Net::HTTP::Post.new(uri)
+              req['api-key'] = ENV['DEVTO_API_KEY']
+              req['Content-Type'] = 'application/json'
 
-# Prepara payload
-payload = {
-  article: {
-    title: title,
-    body_markdown: body,
-    published: true,
-    canonical_url: canonical,
-    description: description,
-    tags: tags
-  }
-}
+              body = %q(${BODY})
+              tags = '${TAGS_RAW}'.split(',').map(&:strip).reject(&:empty?).first(4)
 
-# Faz a requisição
-uri = URI('https://dev.to/api/articles')
-http = Net::HTTP.new(uri.host, uri.port)
-http.use_ssl = true
+              payload = {
+                article: {
+                  title: '${TITLE}',
+                  body_markdown: body,
+                  published: true,
+                  canonical_url: '${CANONICAL}',
+                  description: '${DESCRIPTION}',
+                  tags: tags
+                }
+              }
 
-request = Net::HTTP::Post.new(uri)
-request['api-key'] = api_key
-request['Content-Type'] = 'application/json'
-request.body = payload.to_json
+              req.body = payload.to_json
+              res = http.request(req)
 
-response = http.request(request)
-
-if response.code.to_i >= 200 && response.code.to_i < 300
-  result = JSON.parse(response.body)
-  puts "✅ Publicado com sucesso!"
-  puts "🔗 URL: #{result['url']}"
-else
-  puts "❌ Erro: #{response.code}"
-  puts response.body
-  exit 1
-end
-RUBY
+              if res.code.to_i == 201
+                puts 'Post publicado com sucesso no dev.to!'
+                puts 'URL: ' + JSON.parse(res.body)['url']
+              else
+                puts 'Erro ao publicar: ' + res.code + ' - ' + res.body
+                exit 1
+              end
+            "
           done
