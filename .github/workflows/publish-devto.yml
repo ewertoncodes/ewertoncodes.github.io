@@ -14,19 +14,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # precisa do commit anterior para detectar arquivos novos
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.4
+          fetch-depth: 2
 
       - name: Detect new posts and publish to dev.to
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
           BLOG_URL: "https://ewertoncodes.github.io"
         run: |
-          # Pega os arquivos .md em _posts/ que foram adicionados neste push
           NEW_POSTS=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- '_posts/**.md')
 
           if [ -z "$NEW_POSTS" ]; then
@@ -36,60 +30,67 @@ jobs:
 
           for POST in $NEW_POSTS; do
             echo "Publicando: $POST"
+            POST_PATH="$POST" python3 - << 'PYEOF'
+          import os, re, json, urllib.request, urllib.error
 
-            # Extrai o slug do nome do arquivo (remove data e extensão)
-            FILENAME=$(basename "$POST" .md)
-            SLUG=$(echo "$FILENAME" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}-//')
-            CANONICAL="$BLOG_URL/posts/$SLUG/"
+          post_path = os.environ["POST_PATH"]
+          blog_url = os.environ["BLOG_URL"]
+          api_key = os.environ["DEVTO_API_KEY"]
 
-            # Extrai o front matter
-            TITLE=$(grep -m1 '^title:' "$POST" | sed "s/^title: *//;s/^['\"]//;s/['\"]$//")
-            DESCRIPTION=$(grep -m1 '^description:' "$POST" | sed 's/^description: *//')
-            TAGS_RAW=$(awk '/^tags:/{found=1; next} found && /^- /{print; next} found && !/^- /{exit}' "$POST" | sed 's/^- //' | head -4 | tr '\n' ',' | sed 's/,$//')
+          with open(post_path, "r") as f:
+              content = f.read()
 
-            # Extrai o corpo do post (remove o front matter)
-            BODY=$(awk 'BEGIN{fm=0} /^---/{fm++; next} fm>=2{print}' "$POST")
+          parts = content.split("---", 2)
+          front_matter = parts[1] if len(parts) >= 3 else ""
+          body = parts[2].strip() if len(parts) >= 3 else content
 
-            # Remove canonical_url do corpo se existir
-            BODY=$(echo "$BODY" | grep -v '^canonical_url:')
+          def get_field(fm, key):
+              match = re.search(rf"^{key}:\s*(.+)$", fm, re.MULTILINE)
+              return match.group(1).strip().strip("'\"") if match else ""
 
-            # Monta o JSON e publica na API do dev.to
-            ruby -e "
-              require 'net/http'
-              require 'json'
-              require 'uri'
+          def get_list_field(fm, key):
+              match = re.search(rf"^{key}:\s*\n((?:- .+\n?)+)", fm, re.MULTILINE)
+              if not match:
+                  return []
+              return [line.strip("- ").strip() for line in match.group(1).strip().split("\n")]
 
-              uri = URI('https://dev.to/api/articles')
-              http = Net::HTTP.new(uri.host, uri.port)
-              http.use_ssl = true
+          title = get_field(front_matter, "title")
+          description = get_field(front_matter, "description")
+          tags = get_list_field(front_matter, "tags")[:4]
 
-              req = Net::HTTP::Post.new(uri)
-              req['api-key'] = ENV['DEVTO_API_KEY']
-              req['Content-Type'] = 'application/json'
+          filename = os.path.basename(post_path).replace(".md", "")
+          slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
+          canonical = f"{blog_url}/posts/{slug}/"
 
-              body = %q(${BODY})
-              tags = '${TAGS_RAW}'.split(',').map(&:strip).reject(&:empty?).first(4)
+          body = re.sub(r"\{:\s*\.prompt-\w+\s*\}", "", body)
 
-              payload = {
-                article: {
-                  title: '${TITLE}',
-                  body_markdown: body,
-                  published: true,
-                  canonical_url: '${CANONICAL}',
-                  description: '${DESCRIPTION}',
-                  tags: tags
-                }
+          payload = {
+              "article": {
+                  "title": title,
+                  "body_markdown": body,
+                  "published": True,
+                  "canonical_url": canonical,
+                  "description": description,
+                  "tags": tags,
               }
+          }
 
-              req.body = payload.to_json
-              res = http.request(req)
+          data = json.dumps(payload).encode("utf-8")
+          req = urllib.request.Request(
+              "https://dev.to/api/articles",
+              data=data,
+              headers={"Content-Type": "application/json", "api-key": api_key},
+              method="POST",
+          )
 
-              if res.code.to_i == 201
-                puts 'Post publicado com sucesso no dev.to!'
-                puts 'URL: ' + JSON.parse(res.body)['url']
-              else
-                puts 'Erro ao publicar: ' + res.code + ' - ' + res.body
-                exit 1
-              end
-            "
+          try:
+              with urllib.request.urlopen(req) as res:
+                  result = json.loads(res.read())
+                  print(f"Publicado com sucesso!")
+                  print(f"URL: {result.get('url')}")
+                  print(f"Canonical: {canonical}")
+          except urllib.error.HTTPError as e:
+              print(f"Erro ao publicar: {e.code} - {e.read().decode()}")
+              exit(1)
+          PYEOF
           done
