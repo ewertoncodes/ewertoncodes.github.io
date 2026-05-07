@@ -18,8 +18,7 @@ jobs:
           fetch-depth: 2
 
       - name: Install Python dependencies
-        run: |
-          pip3 install pyyaml
+        run: pip3 install pyyaml
 
       - name: Detect new posts and publish to dev.to
         env:
@@ -31,26 +30,25 @@ jobs:
           else
             NEW_POSTS=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
           fi
-
+          
           if [ -z "$NEW_POSTS" ]; then
             echo "Nenhum post novo encontrado."
             exit 0
           fi
-
+          
           for POST in $NEW_POSTS; do
             echo "Publicando: $POST"
-            POST_PATH="$POST" python3 - << 'PYEOF'
-import os, re, json, urllib.request, urllib.error
-import yaml
+            python3 -c "
+import os, re, json, urllib.request, urllib.error, yaml
 
-post_path = os.environ["POST_PATH"]
-blog_url = os.environ["BLOG_URL"]
-api_key = os.environ["DEVTO_API_KEY"]
+post_path = '$POST'
+blog_url = '$BLOG_URL'
+api_key = '$DEVTO_API_KEY'
 
-with open(post_path, "r") as f:
+with open(post_path, 'r') as f:
     content = f.read()
 
-parts = content.split("---", 2)
+parts = content.split('---', 2)
 if len(parts) >= 3:
     front_matter = yaml.safe_load(parts[1])
     body = parts[2].strip()
@@ -59,7 +57,6 @@ if len(parts) >= 3:
     description = front_matter.get('description', '')
     tags = front_matter.get('tags', [])
     
-    # Garante que tags são strings e limita a 4
     if isinstance(tags, list):
         tags = [str(tag).strip() for tag in tags if tag]
     else:
@@ -67,55 +64,53 @@ if len(parts) >= 3:
     
     tags = tags[:4]
     
-    # Fallback se tags estiver vazio
     if not tags:
-        tags = ["webdev"]
-        print("⚠️ Nenhuma tag encontrada, usando 'webdev' como padrão")
+        tags = ['database']
+        print('⚠️ Nenhuma tag encontrada, usando database como padrão')
 else:
-    title = ""
-    description = ""
-    tags = ["webdev"]
+    title = ''
+    description = ''
+    tags = ['database']
     body = content
 
-filename = os.path.basename(post_path).replace(".md", "")
-slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
-canonical = f"{blog_url}/posts/{slug}/"
+filename = os.path.basename(post_path).replace('.md', '')
+slug = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', filename)
+canonical = f'{blog_url}/posts/{slug}/'
 
-body = re.sub(r"\{:\s*\.prompt-\w+\s*\}", "", body)
+body = re.sub(r'\{:\s*\.prompt-\w+\s*\}', '', body)
 
-# Log para debug
-print(f"Título: {title}")
-print(f"Tags: {tags}")
-print(f"Canonical: {canonical}")
+print(f'Título: {title}')
+print(f'Tags: {tags}')
+print(f'Canonical: {canonical}')
 
 payload = {
-    "article": {
-        "title": title,
-        "body_markdown": body,
-        "published": True,
-        "canonical_url": canonical,
-        "description": description,
-        "tags": tags,
+    'article': {
+        'title': title,
+        'body_markdown': body,
+        'published': True,
+        'canonical_url': canonical,
+        'description': description,
+        'tags': tags,
     }
 }
 
-data = json.dumps(payload).encode("utf-8")
+data = json.dumps(payload).encode('utf-8')
 req = urllib.request.Request(
-    "https://dev.to/api/articles",
+    'https://dev.to/api/articles',
     data=data,
-    headers={"Content-Type": "application/json", "api-key": api_key},
-    method="POST",
+    headers={'Content-Type': 'application/json', 'api-key': api_key},
+    method='POST',
 )
 
 try:
     with urllib.request.urlopen(req) as res:
         result = json.loads(res.read())
-        print(f"Publicado com sucesso!")
-        print(f"URL: {result.get('url')}")
-        print(f"Canonical: {canonical}")
+        print(f'Publicado com sucesso!')
+        print(f'URL: {result.get('url')}')
+        print(f'Canonical: {canonical}')
 except urllib.error.HTTPError as e:
     error_msg = e.read().decode()
-    print(f"Erro ao publicar: {e.code} - {error_msg}")
+    print(f'Erro ao publicar: {e.code} - {error_msg}')
     exit(1)
-PYEOF
+"
           done
