@@ -2,13 +2,14 @@
 layout: post
 title: 'Size, Length e Count: Qual a diferença?'
 date: 2026-05-04 11:40:00.000000000 -03:00
-categories:
-- backend
+categories: backend ruby
 tags:
-- ruby
-- rails
-description: Descubra as diferenças cruciais entre os métodos size, length e count
-  no Ruby e no ActiveRecord e como eles impactam a performance do seu app Rails.
+  - ruby
+  - performance
+  - arrays
+  - strings
+  - enumerables
+  - ruby-methods
 canonical_url: https://ewertoncodes.github.io/backend/2026/05/04/size-length-count.html
 ---
 ![Size, Length e Count: Qual a diferença?](https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fy1w4rtghzi8wrwax5il9.png)

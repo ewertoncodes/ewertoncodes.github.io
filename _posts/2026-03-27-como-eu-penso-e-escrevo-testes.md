@@ -4,9 +4,11 @@ title: Como eu penso e escrevo meus testes
 date: 2026-03-27 11:40:00.000000000 -03:00
 categories: backend
 tags:
-- ruby
-- testes
-- rspec
+  - testing
+  - tdd
+  - software-testing
+  - quality
+  - best-practices
 canonical_url: https://ewertoncodes.github.io/backend/2026/03/27/como-eu-penso-e-escrevo-testes.html
 ---
 ![Como eu penso e escrevo meus testes](/assets/img/xfb6xdd39lglaxle9ns9.png)

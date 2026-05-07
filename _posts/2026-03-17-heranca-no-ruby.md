@@ -2,11 +2,13 @@
 layout: post
 title: Compartilhando Comportamentos usando Herança no Ruby
 date: 2026-03-17 11:40:00.000000000 -03:00
-categories: backend
+categories: backend ruby
 tags:
-- ruby
-- heranca
-- poo
+  - ruby
+  - inheritance
+  - oop
+  - classes
+  - ruby-oop
 canonical_url: https://ewertoncodes.github.io/backend/2026/03/17/heranca-no-ruby.html
 ---
 <img src="/assets/img/treasure.jpeg" alt="Diagrama de Herança no Ruby" width="800" height="300">

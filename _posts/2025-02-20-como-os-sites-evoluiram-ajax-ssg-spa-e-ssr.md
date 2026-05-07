@@ -2,17 +2,14 @@
 layout: post
 title: 'Como os Sites Evoluíram: AJAX, SSG, SPA e SSR'
 date: 2025-02-20 00:03:50.000000000 -03:00
-categories:
-- frontend
-- web
+categories: frontend web
 tags:
-- frontend
-- spa
-- ssr
-- ssg
-- web
-description: Uma jornada pela evolução da web, desde os sites estáticos tradicionais
-  até as modernas Single Page Applications (SPAs) e Server-Side Rendering (SSR).
+  - ajax
+  - ssg
+  - spa
+  - ssr
+  - web-development
+  - frontend
 canonical_url: https://ewertoncodes.github.io/frontend/web/2025/02/20/como-os-sites-evoluiram-ajax-ssg-spa-e-ssr.html
 ---
 ![image](/assets/img/evolucao.jpg) 

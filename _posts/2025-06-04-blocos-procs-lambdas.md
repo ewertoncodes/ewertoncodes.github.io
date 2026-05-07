@@ -2,15 +2,13 @@
 layout: post
 title: Blocos, Procs e Lambdas no Ruby
 date: 2025-06-04 00:18:20.000000000 -03:00
-categories:
-- backend
-- ruby
+categories: backend ruby
 tags:
-- ruby
-- backend
-- dicas
-description: Entenda definitivamente as diferenças entre Blocos, Procs e Lambdas no
-  Ruby, incluindo o comportamento único do return em cada um deles.
+  - ruby
+  - blocks
+  - procs
+  - lambdas
+  - closures
 canonical_url: https://ewertoncodes.github.io/backend/ruby/2025/06/04/blocos-procs-lambdas.html
 ---
 Ruby é famoso por sua sintaxe elegante e recursos poderosos, entre eles os **Blocos**, **Procs** e **Lambdas**. Se você está começando com Ruby ou quer reforçar o entendimento, este post vai ajudar a esclarecer o que são esses recursos, como funcionam, e quando usá-las.

@@ -2,17 +2,14 @@
 layout: post
 title: 'O problema N+1: Como identificar e resolver'
 date: 2026-02-23 00:17:30.000000000 -03:00
-categories:
-- backend
-- performance
+categories: backend database
 tags:
-- bancodedados
-- performance
-- ruby
-- rails
-- sql
-description: Entenda o que é o temido problema de performance N+1, como ele afeta
-  seu banco de dados e as melhores estratégias para resolvê-lo no Ruby on Rails.
+  - n-plus-one
+  - database
+  - performance
+  - sql
+  - orm
+  - query-optimization
 canonical_url: https://ewertoncodes.github.io/backend/performance/2026/02/23/O-problema-N+1.html
 ---
 Performance é uma das minhas preocupações quando estou desenvolvendo uma aplicação. E um dos problemas mais conhecidos relacionado a performance é o problema N+1. Ele acontece quando temos uma consulta que retorna N registros, e para cada um desses registros, fazemos uma nova consulta para buscar informações relacionadas.

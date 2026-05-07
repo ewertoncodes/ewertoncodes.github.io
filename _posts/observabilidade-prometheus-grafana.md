@@ -4,12 +4,12 @@ title: Observabilidade com Prometheus e Grafana
 date: 2026-03-26 23:51:00.000000000 -03:00
 categories: devops
 tags:
-- devops
-- prometheus
-- grafana
-- observabilidade
-- rails
-- docker
+  - prometheus
+  - grafana
+  - observability
+  - monitoring
+  - devops
+  - metrics
 ---
 ## Observabilidade com Prometheus e Grafana
 

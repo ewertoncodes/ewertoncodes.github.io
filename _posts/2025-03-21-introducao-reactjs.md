@@ -4,9 +4,10 @@ title: Criando meu primeiro componente ReactJS
 date: 2025-03-21 00:03:50.000000000 -03:00
 categories: frontend reactjs
 tags:
-- react
-- frontend
-- javascript
+  - reactjs
+  - components
+  - javascript
+  - frontend
 canonical_url: https://ewertoncodes.github.io/frontend/reactjs/2025/03/21/introducao-reactjs.html
 ---
 O React.js é uma biblioteca JavaScript para criar interfaces dinâmicas na web. Quando desenvolvemos com React, pensamos em componentes, que são pequenos blocos reutilizáveis da interface, como menus, botões e formulários. Basicamente, um componente é uma função que retorna a renderização de um HTML.

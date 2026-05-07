@@ -4,10 +4,11 @@ title: Entendendo o JSON Web Token (JWT)
 date: 2025-12-24 00:17:30.000000000 -03:00
 categories: backend
 tags:
-- jwt
-- backend
-- seguranca
-- auth
+  - jwt
+  - authentication
+  - security
+  - tokens
+  - backend
 canonical_url: https://ewertoncodes.github.io/backend/2025/12/24/entendendo-json-web-token-jwt.html
 ---
 Em algum momento, ao criar uma aplicação web, precisamos desenvolver uma solução de autenticação para o sistema. Existem várias estratégias para isso, como autenticação por senha,
