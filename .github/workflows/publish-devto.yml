@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "_posts/**.md"
-  workflow_dispatch:  # ← ADICIONE ESTA LINHA
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -17,17 +17,18 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Install Python dependencies
+        run: |
+          pip3 install pyyaml
+
       - name: Detect new posts and publish to dev.to
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
           BLOG_URL: "https://ewertoncodes.github.io"
         run: |
-          # MODIFIQUE ESTA LINHA para incluir modified também no push
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # Modo manual: publica TODOS os posts
             NEW_POSTS=$(ls _posts/*.md 2>/dev/null || true)
           else
-            # Modo automático: apenas novos ou modificados
             NEW_POSTS=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
           fi
 
@@ -39,72 +40,82 @@ jobs:
           for POST in $NEW_POSTS; do
             echo "Publicando: $POST"
             POST_PATH="$POST" python3 - << 'PYEOF'
-          import os, re, json, urllib.request, urllib.error
+import os, re, json, urllib.request, urllib.error
+import yaml
 
-          post_path = os.environ["POST_PATH"]
-          blog_url = os.environ["BLOG_URL"]
-          api_key = os.environ["DEVTO_API_KEY"]
+post_path = os.environ["POST_PATH"]
+blog_url = os.environ["BLOG_URL"]
+api_key = os.environ["DEVTO_API_KEY"]
 
-          with open(post_path, "r") as f:
-              content = f.read()
+with open(post_path, "r") as f:
+    content = f.read()
 
-          parts = content.split("---", 2)
-          front_matter = parts[1] if len(parts) >= 3 else ""
-          body = parts[2].strip() if len(parts) >= 3 else content
+parts = content.split("---", 2)
+if len(parts) >= 3:
+    front_matter = yaml.safe_load(parts[1])
+    body = parts[2].strip()
+    
+    title = front_matter.get('title', '')
+    description = front_matter.get('description', '')
+    tags = front_matter.get('tags', [])
+    
+    # Garante que tags são strings e limita a 4
+    if isinstance(tags, list):
+        tags = [str(tag).strip() for tag in tags if tag]
+    else:
+        tags = [str(tags)] if tags else []
+    
+    tags = tags[:4]
+    
+    # Fallback se tags estiver vazio
+    if not tags:
+        tags = ["webdev"]
+        print("⚠️ Nenhuma tag encontrada, usando 'webdev' como padrão")
+else:
+    title = ""
+    description = ""
+    tags = ["webdev"]
+    body = content
 
-          def get_field(fm, key):
-              match = re.search(rf"^{key}:\s*(.+)$", fm, re.MULTILINE)
-              return match.group(1).strip().strip("'\"") if match else ""
+filename = os.path.basename(post_path).replace(".md", "")
+slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
+canonical = f"{blog_url}/posts/{slug}/"
 
-          def get_list_field(fm, key):
-              match = re.search(rf"^{key}:\s*\n((?:- .+\n?)+)", fm, re.MULTILINE)
-              if not match:
-                  return []
-              return [line.strip("- ").strip() for line in match.group(1).strip().split("\n")]
+body = re.sub(r"\{:\s*\.prompt-\w+\s*\}", "", body)
 
-          title = get_field(front_matter, "title")
-          description = get_field(front_matter, "description")
-          tags = get_list_field(front_matter, "tags")[:4]
+# Log para debug
+print(f"Título: {title}")
+print(f"Tags: {tags}")
+print(f"Canonical: {canonical}")
 
-          filename = os.path.basename(post_path).replace(".md", "")
-          slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename)
-          canonical = f"{blog_url}/posts/{slug}/"
+payload = {
+    "article": {
+        "title": title,
+        "body_markdown": body,
+        "published": True,
+        "canonical_url": canonical,
+        "description": description,
+        "tags": tags,
+    }
+}
 
-          body = re.sub(r"\{:\s*\.prompt-\w+\s*\}", "", body)
+data = json.dumps(payload).encode("utf-8")
+req = urllib.request.Request(
+    "https://dev.to/api/articles",
+    data=data,
+    headers={"Content-Type": "application/json", "api-key": api_key},
+    method="POST",
+)
 
-          # Log para debug
-          print(f"Título: {title}")
-          print(f"Tags: {tags}")
-          print(f"Canonical: {canonical}")
-
-          payload = {
-              "article": {
-                  "title": title,
-                  "body_markdown": body,
-                  "published": True,
-                  "canonical_url": canonical,
-                  "description": description,
-                  "tags": tags,
-              }
-          }
-
-          data = json.dumps(payload).encode("utf-8")
-          req = urllib.request.Request(
-              "https://dev.to/api/articles",
-              data=data,
-              headers={"Content-Type": "application/json", "api-key": api_key},
-              method="POST",
-          )
-
-          try:
-              with urllib.request.urlopen(req) as res:
-                  result = json.loads(res.read())
-                  print(f"Publicado com sucesso!")
-                  print(f"URL: {result.get('url')}")
-                  print(f"Canonical: {canonical}")
-          except urllib.error.HTTPError as e:
-              error_msg = e.read().decode()
-              print(f"Erro ao publicar: {e.code} - {error_msg}")
-              exit(1)
-          PYEOF
+try:
+    with urllib.request.urlopen(req) as res:
+        result = json.loads(res.read())
+        print(f"Publicado com sucesso!")
+        print(f"URL: {result.get('url')}")
+        print(f"Canonical: {canonical}")
+except urllib.error.HTTPError as e:
+    error_msg = e.read().decode()
+    print(f"Erro ao publicar: {e.code} - {error_msg}")
+    exit(1)
+PYEOF
           done
