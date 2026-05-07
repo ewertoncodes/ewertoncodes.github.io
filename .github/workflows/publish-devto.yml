@@ -17,8 +17,13 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Install Python dependencies
-        run: pip3 install pyyaml
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Install dependencies
+        run: gem install yaml front_matter_parser
 
       - name: Detect new posts and publish to dev.to
         env:
@@ -30,87 +35,90 @@ jobs:
           else
             NEW_POSTS=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- '_posts/**.md')
           fi
-          
+
           if [ -z "$NEW_POSTS" ]; then
             echo "Nenhum post novo encontrado."
             exit 0
           fi
-          
+
           for POST in $NEW_POSTS; do
             echo "Publicando: $POST"
-            python3 -c "
-import os, re, json, urllib.request, urllib.error, yaml
+            
+            # Lê o post usando Ruby com parsing correto
+            ruby <<RUBY
+require 'json'
+require 'net/http'
+require 'uri'
+require 'yaml'
 
 post_path = '$POST'
 blog_url = '$BLOG_URL'
 api_key = '$DEVTO_API_KEY'
 
-with open(post_path, 'r') as f:
-    content = f.read()
+# Lê o arquivo
+content = File.read(post_path)
 
-parts = content.split('---', 2)
-if len(parts) >= 3:
-    front_matter = yaml.safe_load(parts[1])
-    body = parts[2].strip()
-    
-    title = front_matter.get('title', '')
-    description = front_matter.get('description', '')
-    tags = front_matter.get('tags', [])
-    
-    if isinstance(tags, list):
-        tags = [str(tag).strip() for tag in tags if tag]
-    else:
-        tags = [str(tags)] if tags else []
-    
-    tags = tags[:4]
-    
-    if not tags:
-        tags = ['database']
-        print('⚠️ Nenhuma tag encontrada, usando database como padrão')
-else:
-    title = ''
-    description = ''
-    tags = ['database']
-    body = content
+# Separa front matter e body
+parts = content.split('---', 3)
+if parts.length >= 3
+  front_matter = YAML.safe_load(parts[1])
+  body = parts[2].strip
+else
+  puts "ERRO: Front matter inválido em #{post_path}"
+  exit 1
+end
 
-filename = os.path.basename(post_path).replace('.md', '')
-slug = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', filename)
-canonical = f'{blog_url}/posts/{slug}/'
+# Extrai dados
+title = front_matter['title']
+description = front_matter['description'] || ''
+tags = front_matter['tags'] || []
+tags = tags.first(4) if tags.is_a?(Array)
+tags = ['database'] if tags.nil? || tags.empty?
 
-body = re.sub(r'\{:\s*\.prompt-\w+\s*\}', '', body)
+# Gera slug e canonical
+filename = File.basename(post_path, '.md')
+slug = filename.gsub(/^\d{4}-\d{2}-\d{2}-/, '')
+canonical = "\#{blog_url}/posts/\#{slug}/"
 
-print(f'Título: {title}')
-print(f'Tags: {tags}')
-print(f'Canonical: {canonical}')
+# Remove sintaxe do Jekyll do body
+body.gsub!(/\{:\s*\.prompt-\w+\s*\}/, '')
 
+puts "Título: #{title}"
+puts "Tags: #{tags.join(', ')}"
+puts "Canonical: #{canonical}"
+
+# Prepara payload
 payload = {
-    'article': {
-        'title': title,
-        'body_markdown': body,
-        'published': True,
-        'canonical_url': canonical,
-        'description': description,
-        'tags': tags,
-    }
+  article: {
+    title: title,
+    body_markdown: body,
+    published: true,
+    canonical_url: canonical,
+    description: description,
+    tags: tags
+  }
 }
 
-data = json.dumps(payload).encode('utf-8')
-req = urllib.request.Request(
-    'https://dev.to/api/articles',
-    data=data,
-    headers={'Content-Type': 'application/json', 'api-key': api_key},
-    method='POST',
-)
+# Faz a requisição
+uri = URI('https://dev.to/api/articles')
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
 
-try:
-    with urllib.request.urlopen(req) as res:
-        result = json.loads(res.read())
-        print(f'Publicado com sucesso!')
-        print(f'URL: {result.get('url')}')
-        print(f'Canonical: {canonical}')
-except urllib.error.HTTPError as e:
-    error_msg = e.read().decode()
-    print(f'Erro ao publicar: {e.code} - {error_msg}')
-    exit(1)
-"
+request = Net::HTTP::Post.new(uri)
+request['api-key'] = api_key
+request['Content-Type'] = 'application/json'
+request.body = payload.to_json
+
+response = http.request(request)
+
+if response.code.to_i >= 200 && response.code.to_i < 300
+  result = JSON.parse(response.body)
+  puts "✅ Publicado com sucesso!"
+  puts "🔗 URL: #{result['url']}"
+else
+  puts "❌ Erro: #{response.code}"
+  puts response.body
+  exit 1
+end
+RUBY
           done
